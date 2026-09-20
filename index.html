@@ -45,9 +45,13 @@
         <p class="intro-subtitle step-4" id="intro-subtitle">Preparamos esta sorpresa especialmente para ti.</p>
         
         <div class="intro-actions step-5">
-          <button id="btn-start" class="btn-primary" aria-label="Comenzar sorpresa">
-            <span class="btn-text">Comenzar sorpresa ❤️</span>
+          <button id="btn-start-fullscreen" class="btn-primary" aria-label="Ver sorpresa en pantalla completa">
+            <span class="btn-icon">✨</span>
+            <span class="btn-text">Ver en Pantalla Completa ❤️</span>
             <span class="btn-shimmer" aria-hidden="true"></span>
+          </button>
+          <button id="btn-start-normal" class="btn-secondary-intro" aria-label="Ver sorpresa en modo normal">
+            <span>Ver en modo normal</span>
           </button>
         </div>
       </div>
@@ -76,6 +80,16 @@
         
         <!-- Marco visual y sombra cinematográfica -->
         <div class="video-frame-wrapper" id="video-wrapper">
+          <!-- Fondo ambiental dinámico desenfocado para videos verticales u horizontales -->
+          <video
+            id="backdrop-video"
+            class="backdrop-video"
+            aria-hidden="true"
+            muted
+            playsinline
+            preload="auto"
+          ></video>
+
           <video
             id="main-video"
             class="main-video"

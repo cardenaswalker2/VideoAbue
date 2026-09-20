@@ -107,12 +107,14 @@ document.addEventListener("DOMContentLoaded", () => {
     introPhrase2: document.getElementById("intro-phrase-2"),
     grandmaTitle: document.getElementById("grandma-title"),
     introSubtitle: document.getElementById("intro-subtitle"),
-    btnStart: document.getElementById("btn-start"),
+    btnStartFullscreen: document.getElementById("btn-start-fullscreen"),
+    btnStartNormal: document.getElementById("btn-start-normal"),
 
     // Video Screen
     videoSection: document.getElementById("video-section"),
     videoStage: document.getElementById("video-stage"),
     videoWrapper: document.getElementById("video-wrapper"),
+    backdropVideo: document.getElementById("backdrop-video"),
     mainVideo: document.getElementById("main-video"),
     videoCounter: document.getElementById("video-counter"),
     dotsContainer: document.getElementById("dots-container"),
@@ -168,10 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (DOM.introPhrase2) DOM.introPhrase2.textContent = config.frase2;
     if (DOM.grandmaTitle) DOM.grandmaTitle.textContent = config.nombreAbuela;
     if (DOM.introSubtitle) DOM.introSubtitle.textContent = config.subtitulo;
-    if (DOM.btnStart) {
-      const btnText = DOM.btnStart.querySelector(".btn-text");
-      if (btnText) btnText.textContent = config.botonComenzar;
-    }
 
     if (DOM.outroPhrase1) DOM.outroPhrase1.textContent = config.fraseFinal1;
     if (DOM.outroTitle) DOM.outroTitle.textContent = config.tituloFinal;
@@ -249,6 +247,19 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ==========================================================================
      7. CONTROL Y REPRODUCCIÓN DE VIDEOS
      ========================================================================== */
+  function updateVideoOrientation() {
+    if (!DOM.mainVideo.videoWidth || !DOM.mainVideo.videoHeight) return;
+    
+    const isPortrait = DOM.mainVideo.videoHeight > DOM.mainVideo.videoWidth;
+    if (isPortrait) {
+      DOM.videoWrapper.classList.add("is-portrait");
+      DOM.videoWrapper.classList.remove("is-landscape");
+    } else {
+      DOM.videoWrapper.classList.add("is-landscape");
+      DOM.videoWrapper.classList.remove("is-portrait");
+    }
+  }
+
   function loadAndPlayVideo(index) {
     if (index < 0 || index >= state.totalVideos) return;
 
@@ -257,14 +268,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Animación de salida del video actual (fade out + blur sutil)
     DOM.mainVideo.classList.add("transitioning");
+    if (DOM.backdropVideo) DOM.backdropVideo.classList.add("transitioning");
 
     setTimeout(() => {
       state.currentIndex = index;
       const currentVideo = videos[state.currentIndex];
 
-      // Cambiar fuente del video
+      // Cambiar fuente de los videos (principal y fondo desenfocado)
       DOM.mainVideo.src = currentVideo.src;
       DOM.mainVideo.load();
+
+      if (DOM.backdropVideo) {
+        DOM.backdropVideo.src = currentVideo.src;
+        DOM.backdropVideo.load();
+      }
 
       updateProgressUI();
       preloadNextVideo(index + 1);
@@ -277,12 +294,16 @@ document.addEventListener("DOMContentLoaded", () => {
             state.isPlaying = true;
             updatePlayPauseButton(true);
             DOM.mainVideo.classList.remove("transitioning");
+            if (DOM.backdropVideo) {
+              DOM.backdropVideo.classList.remove("transitioning");
+              DOM.backdropVideo.play().catch(() => {});
+            }
             state.isTransitioning = false;
           })
           .catch((err) => {
             console.warn("Autoplay bloqueado o archivo no encontrado:", err);
-            // Si el video no puede reproducirse por formato o falta de archivo
             DOM.mainVideo.classList.remove("transitioning");
+            if (DOM.backdropVideo) DOM.backdropVideo.classList.remove("transitioning");
             state.isTransitioning = false;
             updatePlayPauseButton(false);
           });
@@ -297,6 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
       DOM.mainVideo.play()
         .then(() => {
           state.isPlaying = true;
+          if (DOM.backdropVideo) DOM.backdropVideo.play().catch(() => {});
           updatePlayPauseButton(true);
           triggerCenterPlayIndicator(true);
         })
@@ -305,151 +327,38 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     } else {
       DOM.mainVideo.pause();
+      if (DOM.backdropVideo) DOM.backdropVideo.pause();
       state.isPlaying = false;
       updatePlayPauseButton(false);
       triggerCenterPlayIndicator(false);
     }
   }
 
-  function updatePlayPauseButton(isPlaying) {
-    const iconPlay = DOM.btnPlayPause.querySelector(".icon-play");
-    const iconPause = DOM.btnPlayPause.querySelector(".icon-pause");
-
-    if (isPlaying) {
-      if (iconPlay) iconPlay.style.display = "none";
-      if (iconPause) iconPause.style.display = "block";
-      DOM.btnPlayPause.setAttribute("aria-label", "Pausar video");
-    } else {
-      if (iconPlay) iconPlay.style.display = "block";
-      if (iconPause) iconPause.style.display = "none";
-      DOM.btnPlayPause.setAttribute("aria-label", "Reproducir video");
-    }
-  }
-
-  function triggerCenterPlayIndicator(isPlaying) {
-    DOM.centerPlayIndicator.classList.remove("show-play", "show-pause", "flash");
-    void DOM.centerPlayIndicator.offsetWidth;
-
-    if (isPlaying) {
-      DOM.centerPlayIndicator.classList.add("show-play", "flash");
-    } else {
-      DOM.centerPlayIndicator.classList.add("show-pause", "flash");
-    }
-
-    setTimeout(() => {
-      DOM.centerPlayIndicator.classList.remove("flash");
-    }, 600);
-  }
-
-  function goToNextVideo() {
-    if (state.isTransitioning) return;
-
-    if (state.currentIndex + 1 < state.totalVideos) {
-      loadAndPlayVideo(state.currentIndex + 1);
-    } else {
-      // Hemos llegado al final de todos los videos -> Pantalla final
-      finishExperience();
-    }
-  }
-
-  function goToPrevVideo() {
-    if (state.isTransitioning) return;
-
-    if (state.currentIndex > 0) {
-      loadAndPlayVideo(state.currentIndex - 1);
-    } else {
-      // Si está en el primer video y lleva más de 3 segundos, reiniciar el video
-      if (DOM.mainVideo.currentTime > 3) {
-        DOM.mainVideo.currentTime = 0;
-      }
-    }
-  }
-
-  function goToVideo(index) {
-    if (state.isTransitioning || index === state.currentIndex) return;
-    loadAndPlayVideo(index);
-  }
-
-  /* ==========================================================================
-     8. PRECARGA INTELIGENTE DEL SIGUIENTE VIDEO
-     ========================================================================== */
-  function preloadNextVideo(nextIndex) {
-    if (nextIndex < state.totalVideos) {
-      if (!state.nextVideoPreloader) {
-        state.nextVideoPreloader = document.createElement("video");
-        state.nextVideoPreloader.preload = "auto";
-      }
-      state.nextVideoPreloader.src = videos[nextIndex].src;
-    }
-  }
-
-  /* ==========================================================================
-     9. MANEJO DE ERRORES AMIGABLE
-     ========================================================================== */
-  function showErrorOverlay() {
-    DOM.videoErrorOverlay.classList.remove("hidden");
-  }
-
-  function hideErrorOverlay() {
-    DOM.videoErrorOverlay.classList.add("hidden");
-  }
-
-  /* ==========================================================================
-     10. PANTALLA FINAL (OUTRO) & REINICIO
-     ========================================================================== */
-  function finishExperience() {
-    DOM.mainVideo.pause();
-    showScreen(DOM.outroScreen);
-    launchCelebrationEffect();
-  }
-
-  function restartExperience() {
-    state.currentIndex = 0;
-    showScreen(DOM.introScreen);
-  }
-
-  /* ==========================================================================
-     11. BARRA DE PROGRESO Y TIEMPO
-     ========================================================================== */
-  function formatTime(seconds) {
-    if (isNaN(seconds) || seconds < 0) return "0:00";
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
-  }
-
-  function updateProgressBar() {
-    if (!DOM.mainVideo.duration) return;
-    const current = DOM.mainVideo.currentTime;
-    const duration = DOM.mainVideo.duration;
-    const pct = (current / duration) * 100;
-    DOM.progressFill.style.width = `${pct}%`;
-    DOM.progressContainer.setAttribute("aria-valuenow", Math.round(pct));
-    DOM.timeDisplay.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
-  }
-
   function seekVideo(e) {
     const rect = DOM.progressContainer.getBoundingClientRect();
     const pos = (e.clientX - rect.left) / rect.width;
     if (DOM.mainVideo.duration) {
-      DOM.mainVideo.currentTime = Math.max(0, Math.min(pos * DOM.mainVideo.duration, DOM.mainVideo.duration));
+      const targetTime = Math.max(0, Math.min(pos * DOM.mainVideo.duration, DOM.mainVideo.duration));
+      DOM.mainVideo.currentTime = targetTime;
+      if (DOM.backdropVideo) DOM.backdropVideo.currentTime = targetTime;
     }
   }
 
   /* ==========================================================================
      12. PANTALLA COMPLETA & AUDIO
      ========================================================================== */
-  function toggleFullscreen() {
-    const iconFsEnter = DOM.btnFullscreen.querySelector(".icon-fs-enter");
-    const iconFsExit = DOM.btnFullscreen.querySelector(".icon-fs-exit");
+  function enterFullscreen() {
+    const elem = DOM.videoStage || document.documentElement;
+    if (elem.requestFullscreen) {
+      return elem.requestFullscreen().catch(err => console.warn(err));
+    } else if (elem.webkitRequestFullscreen) {
+      return elem.webkitRequestFullscreen();
+    }
+  }
 
+  function toggleFullscreen() {
     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      const elem = DOM.videoStage || document.documentElement;
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen().catch(err => console.warn(err));
-      } else if (elem.webkitRequestFullscreen) {
-        elem.webkitRequestFullscreen();
-      }
+      enterFullscreen();
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen().catch(err => console.warn(err));
@@ -611,33 +520,56 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ==========================================================================
      15. REGISTRO DE EVENTOS
      ========================================================================== */
+  function startSurprise(withFullscreen = false) {
+    if (withFullscreen) {
+      enterFullscreen();
+    }
+    DOM.introScreen.classList.add("cinematic-exit");
+    setTimeout(() => {
+      showScreen(DOM.videoSection);
+      renderDots();
+      loadAndPlayVideo(0);
+    }, 700);
+  }
+
   function setupEventListeners() {
-    // 1. Botón Comenzar
-    DOM.btnStart.addEventListener("click", () => {
-      // Transición cinematográfica inicial
-      DOM.introScreen.classList.add("cinematic-exit");
-      setTimeout(() => {
-        showScreen(DOM.videoSection);
-        renderDots();
-        loadAndPlayVideo(0);
-      }, 700);
-    });
+    // 1. Botones de Inicio (Pantalla Completa vs Normal)
+    if (DOM.btnStartFullscreen) {
+      DOM.btnStartFullscreen.addEventListener("click", () => startSurprise(true));
+    }
+    if (DOM.btnStartNormal) {
+      DOM.btnStartNormal.addEventListener("click", () => startSurprise(false));
+    }
 
     // 2. Eventos del Elemento Video
+    DOM.mainVideo.addEventListener("loadedmetadata", updateVideoOrientation);
+
     DOM.mainVideo.addEventListener("ended", () => {
       goToNextVideo();
     });
 
-    DOM.mainVideo.addEventListener("timeupdate", updateProgressBar);
+    DOM.mainVideo.addEventListener("timeupdate", () => {
+      updateProgressBar();
+      // Asegurar que el fondo desenfocado esté sincronizado
+      if (DOM.backdropVideo && Math.abs(DOM.backdropVideo.currentTime - DOM.mainVideo.currentTime) > 0.4) {
+        DOM.backdropVideo.currentTime = DOM.mainVideo.currentTime;
+      }
+    });
 
     DOM.mainVideo.addEventListener("play", () => {
       state.isPlaying = true;
+      if (DOM.backdropVideo && DOM.backdropVideo.paused) {
+        DOM.backdropVideo.play().catch(() => {});
+      }
       updatePlayPauseButton(true);
       resetControlsTimeout();
     });
 
     DOM.mainVideo.addEventListener("pause", () => {
       state.isPlaying = false;
+      if (DOM.backdropVideo && !DOM.backdropVideo.paused) {
+        DOM.backdropVideo.pause();
+      }
       updatePlayPauseButton(false);
       resetControlsTimeout();
     });
@@ -673,9 +605,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 7. Interacción del Teclado (Accesibilidad Desktop)
     document.addEventListener("keydown", (e) => {
-      // Ignorar si el usuario está interactuando con otro input
       if (["input", "textarea"].includes(document.activeElement.tagName.toLowerCase())) return;
-
       if (!DOM.videoSection.classList.contains("active")) return;
 
       switch (e.code) {
