@@ -344,6 +344,124 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function updatePlayPauseButton(isPlaying) {
+    if (!DOM.btnPlayPause) return;
+    const iconPlay = DOM.btnPlayPause.querySelector(".icon-play");
+    const iconPause = DOM.btnPlayPause.querySelector(".icon-pause");
+
+    if (isPlaying) {
+      if (iconPlay) iconPlay.style.display = "none";
+      if (iconPause) iconPause.style.display = "block";
+      DOM.btnPlayPause.setAttribute("aria-label", "Pausar video");
+    } else {
+      if (iconPlay) iconPlay.style.display = "block";
+      if (iconPause) iconPause.style.display = "none";
+      DOM.btnPlayPause.setAttribute("aria-label", "Reproducir video");
+    }
+  }
+
+  function triggerCenterPlayIndicator(isPlaying) {
+    if (!DOM.centerPlayIndicator) return;
+    DOM.centerPlayIndicator.classList.remove("show-play", "show-pause", "flash");
+    void DOM.centerPlayIndicator.offsetWidth;
+
+    if (isPlaying) {
+      DOM.centerPlayIndicator.classList.add("show-play", "flash");
+    } else {
+      DOM.centerPlayIndicator.classList.add("show-pause", "flash");
+    }
+
+    setTimeout(() => {
+      DOM.centerPlayIndicator.classList.remove("flash");
+    }, 600);
+  }
+
+  function goToNextVideo() {
+    if (state.isTransitioning) return;
+
+    if (state.currentIndex + 1 < state.totalVideos) {
+      loadAndPlayVideo(state.currentIndex + 1);
+    } else {
+      finishExperience();
+    }
+  }
+
+  function goToPrevVideo() {
+    if (state.isTransitioning) return;
+
+    if (state.currentIndex > 0) {
+      loadAndPlayVideo(state.currentIndex - 1);
+    } else {
+      if (DOM.mainVideo.currentTime > 3) {
+        DOM.mainVideo.currentTime = 0;
+      }
+    }
+  }
+
+  function goToVideo(index) {
+    if (state.isTransitioning || index === state.currentIndex) return;
+    loadAndPlayVideo(index);
+  }
+
+  /* ==========================================================================
+     8. PRECARGA INTELIGENTE DEL SIGUIENTE VIDEO
+     ========================================================================== */
+  function preloadNextVideo(nextIndex) {
+    if (nextIndex < state.totalVideos) {
+      if (!state.nextVideoPreloader) {
+        state.nextVideoPreloader = document.createElement("video");
+        state.nextVideoPreloader.preload = "auto";
+      }
+      state.nextVideoPreloader.src = videos[nextIndex].src;
+    }
+  }
+
+  /* ==========================================================================
+     9. MANEJO DE ERRORES AMIGABLE
+     ========================================================================== */
+  function showErrorOverlay() {
+    if (DOM.videoErrorOverlay) DOM.videoErrorOverlay.classList.remove("hidden");
+  }
+
+  function hideErrorOverlay() {
+    if (DOM.videoErrorOverlay) DOM.videoErrorOverlay.classList.add("hidden");
+  }
+
+  /* ==========================================================================
+     10. PANTALLA FINAL (OUTRO) & REINICIO
+     ========================================================================== */
+  function finishExperience() {
+    DOM.mainVideo.pause();
+    if (DOM.backdropVideo) DOM.backdropVideo.pause();
+    showScreen(DOM.outroScreen);
+    launchCelebrationEffect();
+  }
+
+  function restartExperience() {
+    state.currentIndex = 0;
+    showScreen(DOM.introScreen);
+  }
+
+  /* ==========================================================================
+     11. BARRA DE PROGRESO Y TIEMPO
+     ========================================================================== */
+  function formatTime(seconds) {
+    if (isNaN(seconds) || seconds < 0) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  }
+
+  function updateProgressBar() {
+    if (!DOM.mainVideo.duration) return;
+    const current = DOM.mainVideo.currentTime;
+    const duration = DOM.mainVideo.duration;
+    const pct = (current / duration) * 100;
+    if (DOM.progressFill) DOM.progressFill.style.width = `${pct}%`;
+    if (DOM.progressContainer) DOM.progressContainer.setAttribute("aria-valuenow", Math.round(pct));
+    if (DOM.timeDisplay) DOM.timeDisplay.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+  }
+
   /* ==========================================================================
      12. PANTALLA COMPLETA & AUDIO
      ========================================================================== */
