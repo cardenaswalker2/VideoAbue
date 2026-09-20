@@ -52,6 +52,10 @@ document.addEventListener("DOMContentLoaded", () => {
       nombre: "De: Deiris ✨"
     },
     {
+      src: "IngridVideoAbue.mp4",
+      nombre: "De: Ingrid 🌸"
+    },
+    {
       src: "JuanCarlosVideoAbue.mp4",
       nombre: "De: Juan Carlos 💐"
     },
@@ -64,12 +68,28 @@ document.addEventListener("DOMContentLoaded", () => {
       nombre: "De: Manuel 🌟"
     },
     {
+      src: "MarielaVideoAbue.mp4",
+      nombre: "De: Mariela 🌺"
+    },
+    {
+      src: "MarledisVideoAbue.mp4",
+      nombre: "De: Marledis 💫"
+    },
+    {
       src: "MisaelVideoAbue.mp4",
       nombre: "De: Misael ❤️"
     },
     {
       src: "NorelisVideoAbue.mp4",
       nombre: "De: Norelis 💖"
+    },
+    {
+      src: "NurisYfamiliaVideoAbue.mp4",
+      nombre: "De: Nuris y Familia 🌷"
+    },
+    {
+      src: "YesicaVideoAbue.mp4",
+      nombre: "De: Yesica 🌻"
     }
   ];
 
