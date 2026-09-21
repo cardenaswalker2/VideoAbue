@@ -45,60 +45,64 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   const videos = [
     {
-      src: "AdalnerYfamiliaVideoAbue.mp4",
-      nombre: "De: Adalner y Familia ❤️"
-    },
-    {
-      src: "DeirisVideoAbue.mp4",
-      nombre: "De: Deiris ✨"
-    },
-    {
-      src: "EmisVideoAbue.mp4",
-      nombre: "De: Emis 💖"
-    },
-    {
-      src: "IngridVideoAbue.mp4",
-      nombre: "De: Ingrid 🌸"
-    },
-    {
-      src: "JuanCarlosVideoAbue.mp4",
-      nombre: "De: Juan Carlos 💐"
-    },
-    {
-      src: "KevinHijoVideoAbue.mp4",
-      nombre: "De: Kevin Hijo 🌟"
-    },
-    {
-      src: "LuisAlfonsoYesposaVideoAbue.mp4",
-      nombre: "De: Luis Alfonso y Esposa 🌹"
+      src: "MisaelVideoAbue.mp4",
+      nombre: "De: Misael ❤️"
     },
     {
       src: "ManuelVideoAbue.mp4",
       nombre: "De: Manuel 🌟"
     },
     {
+      src: "JuanCarlosVideoAbue.mp4",
+      nombre: "De: Juan Carlos 💐"
+    },
+    {
+      src: "YesicaVideoAbue.mp4",
+      nombre: "De: Yesica 🌻"
+    },
+    {
+      src: "IngridVideoAbue.mp4",
+      nombre: "De: Ingrid 🌸"
+    },
+    {
       src: "MarielaVideoAbue.mp4",
       nombre: "De: Mariela 🌺"
     },
     {
-      src: "MarledisVideoAbue.mp4",
-      nombre: "De: Marledis 💫"
+      src: "KevinHijoVideoAbue.mp4",
+      nombre: "De: Kevin Hijo 🌟"
     },
     {
-      src: "MisaelVideoAbue.mp4",
-      nombre: "De: Misael ❤️"
-    },
-    {
-      src: "NorelisVideoAbue.mp4",
-      nombre: "De: Norelis 💖"
+      src: "AdalnerYfamiliaVideoAbue.mp4",
+      nombre: "De: Adalner y Familia ❤️"
     },
     {
       src: "NurisYfamiliaVideoAbue.mp4",
       nombre: "De: Nuris y Familia 🌷"
     },
     {
-      src: "YesicaVideoAbue.mp4",
-      nombre: "De: Yesica 🌻"
+      src: "KevinyOrlandoVideoAbue.mp4",
+      nombre: "De: Kevin y Orlando 💫"
+    },
+    {
+      src: "EmisVideoAbue.mp4",
+      nombre: "De: Emis 💖"
+    },
+    {
+      src: "DeirisVideoAbue.mp4",
+      nombre: "De: Deiris ✨"
+    },
+    {
+      src: "NorelisVideoAbue.mp4",
+      nombre: "De: Norelis 💖"
+    },
+    {
+      src: "MarledisVideoAbue.mp4",
+      nombre: "De: Marledis 💫"
+    },
+    {
+      src: "LuisAlfonsoYesposaVideoAbue.mp4",
+      nombre: "De: Luis Alfonso y Esposa 🌹"
     },
     {
       src: "MareYfamiliaVideoAbue.mp4",
