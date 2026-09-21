@@ -52,12 +52,20 @@ document.addEventListener("DOMContentLoaded", () => {
       nombre: "De: Deiris ✨"
     },
     {
+      src: "EmisVideoAbue.mp4",
+      nombre: "De: Emis 💖"
+    },
+    {
       src: "IngridVideoAbue.mp4",
       nombre: "De: Ingrid 🌸"
     },
     {
       src: "JuanCarlosVideoAbue.mp4",
       nombre: "De: Juan Carlos 💐"
+    },
+    {
+      src: "KevinHijoVideoAbue.mp4",
+      nombre: "De: Kevin Hijo 🌟"
     },
     {
       src: "LuisAlfonsoYesposaVideoAbue.mp4",
@@ -90,6 +98,10 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       src: "YesicaVideoAbue.mp4",
       nombre: "De: Yesica 🌻"
+    },
+    {
+      src: "MareYfamiliaVideoAbue.mp4",
+      nombre: "De: Mare y Familia 🎂🎉 (¡Feliz Cumpleaños!)"
     }
   ];
 
