@@ -160,20 +160,46 @@
 
     </section>
 
-    <!-- 4. Pantalla Final de Felicitación y Cierre -->
+    <!-- 4. Pantalla Final de Felicitación y Cierre con Anuncio de Mariachis -->
     <section id="outro-screen" class="screen outro-screen hidden" aria-label="Mensaje final de felicitación">
       <div class="outro-card">
-        <div class="celebration-icon" aria-hidden="true">💐</div>
+        
+        <!-- Badge de anuncio sorpresa -->
+        <div class="outro-surprise-badge" id="outro-surprise-badge">
+          <span class="badge-sparkle">✨</span> ¡Abuela, una última cosa! <span class="badge-sparkle">✨</span>
+        </div>
 
-        <p class="outro-phrase-1" id="outro-phrase-1">Gracias por regalarnos tantos momentos ❤️</p>
-        <h2 class="outro-title" id="outro-title">Te queremos muchísimo, Abuela.</h2>
-        <p class="outro-phrase-2" id="outro-phrase-2">Que nunca te falten razones para sonreír.</p>
+        <!-- Título impactante para pedir silencio y atención -->
+        <h2 class="outro-silence-title" id="outro-silence-title">
+          🤫 ¡Silencio por favor y escuchen bien! 🎶
+        </h2>
 
-        <div class="outro-signature" id="outro-signature">Con todo nuestro amor ❤️</div>
+        <!-- Ondas musicales animadas para anticipar la música -->
+        <div class="music-wave-container" aria-hidden="true">
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+        </div>
+
+        <!-- Mensaje emotivo de amor -->
+        <p class="outro-love-msg" id="outro-love-msg">
+          Todo este amor es poco para lo que tú te mereces. Gracias por ser el corazón de nuestra familia, por cada abrazo, cada bendición y cada sonrisa que nos regalas. ¡Hoy celebramos tu vida con toda el alma!
+        </p>
+
+        <!-- Anuncio final con Mariachis -->
+        <div class="outro-mariachi-announcement">
+          🎺🎻 ¡Y que suene la música en tu honor! 🎻🎺
+        </div>
+
+        <div class="outro-signature" id="outro-signature">
+          ¡Te amamos infinitamente, Abuela! ❤️
+        </div>
 
         <div class="outro-actions">
           <button id="btn-restart" class="btn-primary" aria-label="Ver la sorpresa nuevamente">
-            <span class="btn-text">Ver la sorpresa nuevamente ✨</span>
+            <span class="btn-text">Ver los videos nuevamente ✨</span>
             <span class="btn-shimmer" aria-hidden="true"></span>
           </button>
         </div>

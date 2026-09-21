@@ -24,11 +24,12 @@ document.addEventListener("DOMContentLoaded", () => {
     botonComenzar: "Comenzar sorpresa ❤️",
 
     // Textos de la pantalla final (Outro)
-    fraseFinal1: "Gracias por regalarnos tantos momentos ❤️",
-    tituloFinal: "Te queremos muchísimo, Abuela.",
-    fraseFinal2: "Que nunca te falten razones para sonreír.",
-    firmaFinal: "Con todo nuestro amor ❤️",
-    botonReiniciar: "Ver la sorpresa nuevamente ✨",
+    badgeFinal: "✨ ¡Abuela, una última cosa! ✨",
+    tituloSilencio: "🤫 ¡Silencio por favor y escuchen bien! 🎶",
+    mensajeAmorFinal: "Todo este amor es poco para lo que tú te mereces. Gracias por ser el corazón de nuestra familia, por cada abrazo, cada bendición y cada sonrisa que nos regalas. ¡Hoy celebramos tu vida con toda el alma! ❤️",
+    anuncioMariachis: "🎺🎻 ¡Y que suene la música en tu honor! 🎻🎺",
+    firmaFinal: "¡Te amamos infinitamente, Abuela! ❤️",
+    botonReiniciar: "Ver los videos nuevamente ✨",
 
     // Mensaje en caso de que un video no pueda cargarse
     mensajeError: "No pudimos cargar este mensaje, pero podemos continuar con el siguiente ❤️",
@@ -151,9 +152,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Outro Screen
     outroScreen: document.getElementById("outro-screen"),
-    outroPhrase1: document.getElementById("outro-phrase-1"),
-    outroTitle: document.getElementById("outro-title"),
-    outroPhrase2: document.getElementById("outro-phrase-2"),
+    outroSurpriseBadge: document.getElementById("outro-surprise-badge"),
+    outroSilenceTitle: document.getElementById("outro-silence-title"),
+    outroLoveMsg: document.getElementById("outro-love-msg"),
     outroSignature: document.getElementById("outro-signature"),
     btnRestart: document.getElementById("btn-restart"),
 
@@ -183,9 +184,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (DOM.grandmaTitle) DOM.grandmaTitle.textContent = config.nombreAbuela;
     if (DOM.introSubtitle) DOM.introSubtitle.textContent = config.subtitulo;
 
-    if (DOM.outroPhrase1) DOM.outroPhrase1.textContent = config.fraseFinal1;
-    if (DOM.outroTitle) DOM.outroTitle.textContent = config.tituloFinal;
-    if (DOM.outroPhrase2) DOM.outroPhrase2.textContent = config.fraseFinal2;
+    if (DOM.outroSilenceTitle) DOM.outroSilenceTitle.textContent = config.tituloSilencio;
+    if (DOM.outroLoveMsg) DOM.outroLoveMsg.textContent = config.mensajeAmorFinal;
     if (DOM.outroSignature) DOM.outroSignature.textContent = config.firmaFinal;
     if (DOM.btnRestart) {
       const restartText = DOM.btnRestart.querySelector(".btn-text");
